@@ -1,7 +1,7 @@
 
 
-matrix = [[2,2,0,0], [2,4,4,0], [2,2,4,0], [0,0,8,8]]
-length = len(matrix[0]) -1
+matrix = [[2,2,0,0], [2,4,4,0], [2,2,4,0], [0,0,8,8]]  # this is the matrix
+length = len(matrix[0]) -1                             # finds the length of the indinces of the matrix... the assumption is that it will be 4by4
 length_of_matrix = len(matrix) 
 direction = 'down'
 
