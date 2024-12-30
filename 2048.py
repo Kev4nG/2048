@@ -160,27 +160,24 @@ def compress(stdscr, direction, matrix):
 
     #RIGHT DIRECTION    
     elif direction == 'd':
-        count = 0 
+        count = length 
         for i in range(length_of_matrix):
-            while count != length:
-                left = matrix[i][count]
-                right= matrix[i][count+1]
+            while count != 0:
+                left = matrix[i][count-1]
+                right= matrix[i][count]
                 sum1 = 0
 
                 if left == right and left != 0:
                     sum1 = left + right
-                    matrix[i][count + 1] = sum1
-                    matrix[i][count] = 0
+                    matrix[i][count] = sum1
+                    matrix[i][count -1] = 0
 
-                count += 1
-            count = 0
+                count -= 1
+            count = length
 
 
     #UP DIRECTION
     elif direction == 'w':
-        for i in range(4):
-            print(matrix[i])
-
         count = 0 
         for i in range(length_of_matrix):
             while count != length:
@@ -196,22 +193,23 @@ def compress(stdscr, direction, matrix):
                 count += 1
             count = 0
 
+            
     #DOWN DIRECTION
     elif direction == 's':
-        count = 0 
+        count = length 
         for i in range(length_of_matrix):
-            while count != length:
-                up = matrix[count][i]
-                down = matrix[count+1][i]
+            while count != 0:  
+                up = matrix[count-1][i]
+                down = matrix[count][i]
                 sum1 = 0
 
                 if up == down and up != 0:
                     sum1 = up + down
+                    matrix[count-1][i] = 0
                     matrix[count][i] = sum1
-                    matrix[count+1][i] = 0
 
-                count += 1
-            count = 0
+                count -= 1
+            count = length
 
     display_grid(stdscr, matrix)
 
