@@ -35,8 +35,6 @@ def display_text(stdscr, target, current, wpm=0):
         stdscr.addstr(0, i, char, color)
     
     
-
-
 def wpm_test(stdscr):
     target_text = "This is the example text for this game ig."
     current_text = []
