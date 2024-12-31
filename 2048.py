@@ -1,8 +1,6 @@
 from calendar import c
 import curses
 from curses import wrapper
-from tabnanny import check
-import time
 import random
 import copy
 
@@ -14,16 +12,20 @@ def start_screen(stdscr):
     stdscr.getkey()
 
 
-def display_grid(stdscr, matrix):
+def display_grid(stdscr, matrix, highscore = 0):
     stdscr.clear()
-    adjust_to_largest = 0 #find the largest
-    #find a way to find the largest lenght of number and adjust them to keep each number in the same column
-    stdscr.addstr( 0, 0,f" {str(matrix[0][0]).rjust(adjust_to_largest)} {matrix[0][1]} {matrix[0][2]} {matrix[0][3]}")
-    stdscr.addstr( 1, 0,f" {matrix[1][0]} {matrix[1][1]} {matrix[1][2]} {matrix[1][3]}")
-    stdscr.addstr( 2, 0,f" {matrix[2][0]} {matrix[2][1]} {matrix[2][2]} {matrix[2][3]}")
-    stdscr.addstr( 3, 0,f" {matrix[3][0]} {matrix[3][1]} {matrix[3][2]} {matrix[3][3]}")
-    stdscr.refresh()
+    adjust_to_largest = 0 
 
+    for element in matrix:
+        for element in element:
+            if len(str(element)) > adjust_to_largest:
+                adjust_to_largest = len(str(element))
+
+
+    for y in range(len(matrix)):
+        stdscr.addstr( y + 1, 0 , f" {' '.join(str(value).rjust(adjust_to_largest) for value in matrix[y])}")
+
+    stdscr.refresh()
 
 def spawn(stdscr, matrix):
     length_of_matrix = len(matrix) 
