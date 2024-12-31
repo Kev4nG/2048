@@ -1,12 +1,7 @@
-#works for left and up
-
-#needs logic fix for down and right...
-
-
 
 matrix = [[2,2,2,2], [2,2,2,2], [2,2,2,2], [2,2,2,2]]
 a = [[0,0,0,0], [2,2,2,2], [2,2,2,2], [2,2,2,2]]  # this is the matrix
-length = len(matrix[0]) -1                             # finds the length of the indinces of the matrix... the assumption is that it will be 4by4
+length = len(matrix[0]) -1      # finds the length of the indinces of the matrix... the assumption is that it will be 4by4
 length_of_matrix = len(matrix) 
 direction = 'right'
 

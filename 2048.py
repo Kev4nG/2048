@@ -1,8 +1,10 @@
 from calendar import c
 import curses
 from curses import wrapper
+from tabnanny import check
 import time
 import random
+import copy
 
 def start_screen(stdscr):
     stdscr.clear()
@@ -14,10 +16,12 @@ def start_screen(stdscr):
 
 def display_grid(stdscr, matrix):
     stdscr.clear()
-    stdscr.addstr( 0, 0,f" {matrix[0]}")
-    stdscr.addstr( 1, 0,f" {matrix[1]}")
-    stdscr.addstr( 2, 0,f" {matrix[2]}")
-    stdscr.addstr( 3, 0,f" {matrix[3]}")
+    adjust_to_largest = 0 #find the largest
+    #find a way to find the largest lenght of number and adjust them to keep each number in the same column
+    stdscr.addstr( 0, 0,f" {str(matrix[0][0]).rjust(adjust_to_largest)} {matrix[0][1]} {matrix[0][2]} {matrix[0][3]}")
+    stdscr.addstr( 1, 0,f" {matrix[1][0]} {matrix[1][1]} {matrix[1][2]} {matrix[1][3]}")
+    stdscr.addstr( 2, 0,f" {matrix[2][0]} {matrix[2][1]} {matrix[2][2]} {matrix[2][3]}")
+    stdscr.addstr( 3, 0,f" {matrix[3][0]} {matrix[3][1]} {matrix[3][2]} {matrix[3][3]}")
     stdscr.refresh()
 
 
@@ -87,8 +91,6 @@ def shift(stdscr, direction, matrix):
                     count = -1
                 count += 1
             count = 0
-
-        print(matrix)
 
     #UP DIRECTION
     elif direction == 'w':
@@ -193,7 +195,7 @@ def compress(stdscr, direction, matrix):
                 count += 1
             count = 0
 
-            
+
     #DOWN DIRECTION
     elif direction == 's':
         count = length 
@@ -226,6 +228,11 @@ def grid(stdscr):
 
     while game_state == True:
         try:
+            checkMatrix = copy.deepcopy(matrix)
+            print(checkMatrix)
+            stdscr.addstr( 5, 5,f" checkMatrix: {checkMatrix}")
+            stdscr.addstr( 5, 5,f" checkMatrix: {matrix}")
+
             direction = stdscr.getkey() # w a s d for valid direction inputs 
             if direction == "w" or 'a' or 's' or 'd':
                 index_of_direction += 1
@@ -236,16 +243,16 @@ def grid(stdscr):
                 shift(stdscr, direction_list[index_of_direction], matrix)
                 compress(stdscr, direction_list[index_of_direction], matrix)
                 shift(stdscr, direction_list[index_of_direction], matrix)
-                spawn(stdscr, matrix)
+                if checkMatrix != matrix:
+                    spawn(stdscr, matrix)
+                    checkMatrix = []      
+  
+            if ord(direction) == 27 or direction == "\x1b": #escape key to leave
+                break   
                 
         except:
             continue    # note this blocks it... like an input... now it does not bc of the nodelay
 
-
-
-
-        # if ord(direction) == 27 or direction == "\x1b": #escape key to leave
-        #     break
 
     print(direction_list)
 
