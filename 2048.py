@@ -3,6 +3,7 @@ import curses
 from curses import wrapper
 import random
 import copy
+import sys
 
 def start_screen(stdscr):
     stdscr.clear()
@@ -147,6 +148,7 @@ def compress(stdscr, direction, matrix):
     # LEFT DIRECTION
     if direction == 'a':
         count = 0 
+        total = 0
         for i in range(length_of_matrix):
             while count != length:
                 left = matrix[i][count]
@@ -157,14 +159,17 @@ def compress(stdscr, direction, matrix):
                     sum1 = left + right
                     matrix[i][count] = sum1
                     matrix[i][count+1] = 0
+                    total += sum1
 
                 count += 1
             count = 0
+        return total
 
 
     #RIGHT DIRECTION    
     elif direction == 'd':
-        count = length 
+        count = length
+        total = 0  
         for i in range(length_of_matrix):
             while count != 0:
                 left = matrix[i][count-1]
@@ -175,14 +180,15 @@ def compress(stdscr, direction, matrix):
                     sum1 = left + right
                     matrix[i][count] = sum1
                     matrix[i][count -1] = 0
-
+                    total += sum1
                 count -= 1
             count = length
-
+        return total
 
     #UP DIRECTION
     elif direction == 'w':
         count = 0 
+        total = 0 
         for i in range(length_of_matrix):
             while count != length:
                 up = matrix[count][i]
@@ -193,14 +199,15 @@ def compress(stdscr, direction, matrix):
                     sum1 = up + down
                     matrix[count][i] = sum1
                     matrix[count+1][i] = 0
-
+                    total += sum1
                 count += 1
             count = 0
-
+        return total
 
     #DOWN DIRECTION
     elif direction == 's':
         count = length 
+        total = 0
         for i in range(length_of_matrix):
             while count != 0:  
                 up = matrix[count-1][i]
@@ -211,17 +218,23 @@ def compress(stdscr, direction, matrix):
                     sum1 = up + down
                     matrix[count-1][i] = 0
                     matrix[count][i] = sum1
-
+                    total += sum1
                 count -= 1
             count = length
-
+        return total
+    
     display_grid(stdscr, matrix)
 
+def updateHighscore(highscore, compression_score):
+    new_highscore = highscore + compression_score
+    return new_highscore
 
 def grid(stdscr):
     direction_list = []
     index_of_direction = -1
     game_state = True
+    highscore = 0
+    score = 0
 
     matrix = [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]
 
@@ -231,11 +244,8 @@ def grid(stdscr):
     while game_state == True:
         try:
             checkMatrix = copy.deepcopy(matrix)
-            print(checkMatrix)
-            stdscr.addstr( 5, 5,f" checkMatrix: {checkMatrix}")
-            stdscr.addstr( 5, 5,f" checkMatrix: {matrix}")
-
             direction = stdscr.getkey() # w a s d for valid direction inputs 
+
             if direction == "w" or 'a' or 's' or 'd':
                 index_of_direction += 1
                 direction_list.append(direction)
@@ -243,20 +253,22 @@ def grid(stdscr):
                 
 
                 shift(stdscr, direction_list[index_of_direction], matrix)
-                compress(stdscr, direction_list[index_of_direction], matrix)
+                score = compress(stdscr, direction_list[index_of_direction], matrix)
                 shift(stdscr, direction_list[index_of_direction], matrix)
                 if checkMatrix != matrix:
                     spawn(stdscr, matrix)
                     checkMatrix = []      
+
+                highscore = updateHighscore(highscore, score)
+                stdscr.addstr( 0, 0,f" Highscore: {highscore}")
   
             if ord(direction) == 27 or direction == "\x1b": #escape key to leave
+                sys.exit() #not working as attended
                 break   
                 
         except:
             continue    # note this blocks it... like an input... now it does not bc of the nodelay
 
-
-    print(direction_list)
 
 
 def main(stdscr):
